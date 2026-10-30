@@ -2,7 +2,7 @@
 
 **Python · SQL · DuckDB · pandas · SciPy · statsmodels · Tableau Public**
 
-> **Execution status:** Source events independently validated against the supplied Retailrocket CSV using pandas; verified findings below. Full DuckDB pipeline requires installation and has not been executed in this environment. Tableau Public dashboard is not yet published.
+> **Execution status:** Source events independently validated against the supplied Retailrocket CSV using pandas; verified findings below. DuckDB pipeline executed locally against the Retailrocket dataset; all 11 automated tests passed. Tableau Public dashboard is not yet published.
 
 ## Business question
 Where do observed customers disengage in the e-commerce journey, how does early engagement relate to future conversion, and which product questions should be tested next? This reproducible case study uses the public [Retailrocket dataset](https://www.kaggle.com/datasets/retailrocket/ecommerce-dataset), with **2,756,101 verified event records** (May 3–September 18, 2015).
@@ -14,14 +14,14 @@ Where do observed customers disengage in the e-commerce journey, how does early 
 - **Exact-day observed returns:** D1 **2.760%**, D7 **0.561%**, D30 **0.157%**; each uses horizon-specific follow-up eligibility.
 - **Data quality:** 460 exact duplicate rows flagged, not deleted; no missing timestamps, visitor IDs, or item IDs. Most null `transactionid` values are expected on non-transaction events.
 
-See [`reports/verified_findings.md`](reports/verified_findings.md), [`data/processed/independently_verified.json`](data/processed/independently_verified.json), and `data/processed/items_verified.csv`.
+See [`reports/verified_findings.md`](reports/verified_findings.md).
 
 ## What it demonstrates
 - Multi-stage visitor-level **ordered** conversion funnel with SQL CTEs, conditional aggregation, `LEFT JOIN`s, and safe rate denominators.
-- A 7-day **pre-outcome** engagement measurement followed by a disjoint 30-day purchase outcome; Wilson confidence intervals, Newcombe CI for a risk difference, and a separately implemented logistic-regression model (not yet executed).
+- A 7-day **pre-outcome** engagement measurement followed by a disjoint 30-day purchase outcome; Wilson confidence intervals, Newcombe CI for a risk difference, and a separately implemented logistic-regression model.
 - Weekly first-observed cohorts with D1/D7/D30 **exact-day** return metrics and right-censoring; separate retention and purchase metrics.
 - Item-level event ratios subject to a 100-view support threshold; a point-in-time category mapping example when item properties are available.
-- Implemented DuckDB/SQL pipeline (runtime validation pending), data QA, SQL unit tests (pending DuckDB), independently checked Tableau CSV exports, and a hypothetical checkout A/B experiment with power analysis.
+- Executed DuckDB/SQL pipeline, data QA, automated SQL and export tests (11 passed locally), independently checked Tableau CSV exports, and a hypothetical checkout A/B experiment with power analysis.
 
 ## Tableau-ready exports and preview
 Five aggregate CSVs under `data/processed/tableau/` were independently generated from real Retailrocket records and reconciled with the verified counts. `dashboard/analytics_preview.png` is an independently rendered **static preview**, not a published Tableau dashboard. To rebuild exports without DuckDB, run `python -m src.export_tableau_verified`.
