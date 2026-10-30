@@ -35,4 +35,9 @@ An independent analysis of **2,756,101 Retailrocket events** recorded between Ma
 Randomize eligible visitors at cart initiation between current and simplified checkout experiences, keeping assignment stable by visitor. Primary metric: seven-day cart-to-purchase conversion. Check checkout errors, page performance and refunds as guardrails. Power calculations require a baseline aligned with this experiment's eligibility and outcome window. **No randomized experiment occurred in the source dataset.**
 
 ## Methodological boundaries
-This dataset cannot establish unique shopping sessions, actual new-user acquisition, causal treatment effects, revenue lift or a particular checkout failure. Duplicate event rows were flagged but retained. Findings above came from an independent pandas audit; **DuckDB execution, multivariable logistic regression and Tableau publication remain unverified** until run separately.
+
+This dataset cannot establish unique shopping sessions, actual new-user acquisition, causal treatment effects, revenue lift, or a particular checkout failure. Duplicate event rows were flagged but retained.
+
+The DuckDB analytics pipeline was successfully executed against the Retailrocket dataset, and all 11 automated tests passed locally. Key findings were independently checked using pandas.
+
+Logistic regression results are not reported because their execution and interpretation have not been independently verified. Tableau publication is planned for a later release.
