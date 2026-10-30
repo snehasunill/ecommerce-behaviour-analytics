@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>Customer Journey | Engagement &amp; Conversion</title>
+<style>
+:root{
+  --canvas:#fbf7f8;
+  --paper:#fffdfd;
+  --paper-soft:#f6edef;
+  --line:#e5dadc;
+  --line-strong:#d7c8cb;
+  --ink:#29242e;
+  --muted:#746a78;
+  --blush:#f6b4cb;
+  --accent:#e65d94;
+  --accent-soft:#f8d8e5;
+  --lilac:#b99ae2;
+  --warm:#d4844e;
+  --sidebar:#26222c;
+  --sidebar-line:#3b3542;
+  --shadow:0 18px 45px rgba(59,40,57,.06);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  background:var(--canvas);
+  color:var(--ink);
+  font:15px/1.55 -apple-system,BlinkMacSystemFont,"Helvetica Neue",Helvetica,Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+a{color:inherit}
+.app-shell{display:grid;grid-template-columns:220px minmax(0,1fr);min-height:100vh}
+.sidebar{
+  position:sticky;top:0;height:100vh;align-self:start;
+  background:var(--sidebar);color:#f5edf1;padding:30px 22px 24px;
+  display:flex;flex-direction:column;gap:28px;
+}
+.brand{padding-bottom:20px;border-bottom:1px solid var(--sidebar-line)}
+.brand-mark{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.brand-badge{
+  width:38px;height:38px;border-radius:12px;border:1px solid rgba(255,255,255,.14);
+  display:grid;place-items:center;background:rgba(255,255,255,.05);font-size:16px;color:#ffdbe8
+}
+.brand h2{margin:0;font-size:22px;line-height:1;letter-spacing:-.03em;font-weight:700}
+.brand small{display:block;color:#b6aebb;font-size:11px;letter-spacing:.16em;text-transform:uppercase;margin-top:8px}
+.nav-label{margin:0 0 10px;color:#a79eac;font-size:11px;letter-spacing:.18em;text-transform:uppercase}
+.sidebar nav{display:grid;gap:2px}
+.sidebar nav a{
+  text-decoration:none;color:#d8d0dc;padding:11px 12px;border-radius:12px;
+  font-size:14px;display:flex;align-items:center;gap:10px;transition:.18s ease;
+}
+.sidebar nav a i{font-style:normal;color:#f0adc7;font-size:12px;opacity:.9;width:12px;text-align:center}
+.sidebar nav a:hover{background:rgba(255,255,255,.05)}
+.sidebar nav a.active{background:rgba(246,180,203,.12);color:#fff}
+.sidebar-foot{margin-top:auto;padding-top:18px;border-top:1px solid var(--sidebar-line);color:#bdb2bf;font-size:12px;line-height:1.7}
+.sidebar-foot strong{display:block;color:#fff;font-weight:600;margin-bottom:4px}
+main{min-width:0;padding:28px 42px 48px}
+.topbar{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;margin-bottom:28px}
+.overline{display:flex;align-items:center;gap:12px;margin:0;color:var(--warm);font-size:12px;letter-spacing:.24em;text-transform:uppercase}
+.overline:before{content:"";width:28px;height:1px;background:currentColor;display:inline-block}
+.top-meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+.meta-pill,.tag{
+  border:1px solid var(--line-strong);border-radius:999px;padding:9px 14px;background:rgba(255,255,255,.45);
+  color:var(--muted);font-size:12px
+}
+.hero{display:grid;grid-template-columns:minmax(0,1.35fr) 360px;gap:36px;align-items:end;padding-bottom:30px;border-bottom:1px solid var(--line)}
+.hero h1{
+  margin:10px 0 14px;font-size:clamp(44px,6vw,76px);line-height:.98;letter-spacing:-.065em;
+  font-weight:500;color:#252030;
+}
+.hero h1 .soft{color:#7d7597;font-weight:400;font-style:italic}
+.hero .lead{
+  max-width:840px;margin:0;color:#655d68;font-size:18px;line-height:1.75;
+}
+.hero .lead .highlight{color:#2e2744;border-bottom:3px solid #f0df88;padding-bottom:1px}
+.hero-card{
+  background:rgba(255,255,255,.55);border:1px solid var(--line);border-radius:20px;padding:22px 24px 18px;
+  box-shadow:0 10px 28px rgba(60,45,57,.04)
+}
+.hero-card .meta-row{display:flex;justify-content:space-between;gap:16px;padding:14px 0;border-bottom:1px dashed var(--line)}
+.hero-card .meta-row:first-child{padding-top:0}
+.hero-card .meta-row:last-child{padding-bottom:0;border-bottom:none}
+.hero-card .label{font-size:14px;color:#726877}
+.hero-card .value{font-size:18px;font-weight:600;letter-spacing:-.02em;color:#2c2231;text-align:right}
+.hero-card .date{font-style:italic;color:var(--warm);font-family:Georgia,serif;font-weight:600}
+.section-block{padding:30px 0 10px}
+.section-heading{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:28px;align-items:end;margin-bottom:20px}
+.section-heading h2{
+  margin:0;font-size:26px;line-height:1.15;letter-spacing:-.04em;font-weight:600;color:#2b2430
+}
+.section-heading p{margin:0;color:var(--muted);font-size:14px;line-height:1.7}
+.metrics-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;margin-top:4px}
+.metric-card h3,.mini-metric h3{margin:0 0 12px;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--warm);font-weight:600}
+.mini-stack{display:grid;gap:16px;grid-template-columns:repeat(3,minmax(0,1fr))}
+.featured-metric{
+  background:linear-gradient(125deg,rgba(255,255,255,.48),rgba(246,180,203,.14));
+  border-radius:24px;padding:28px 30px;box-shadow:var(--shadow);border:1px solid var(--line);
+  min-height:225px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.95fr);gap:28px;align-items:center
+}
+.featured-metric .big-number{font-size:clamp(64px,8vw,108px);line-height:.9;letter-spacing:-.08em;font-weight:500;color:#231f2a}
+.featured-metric .subcopy{max-width:44ch;color:#605763;font-size:17px;line-height:1.75}
+.featured-metric .kicker{display:flex;align-items:center;gap:10px;color:var(--warm);font-size:12px;letter-spacing:.18em;text-transform:uppercase;margin-bottom:12px}
+.featured-metric .kicker:before{content:"";width:22px;height:1px;background:currentColor}
+.mini-metric{
+  background:rgba(255,255,255,.56);border:1px solid var(--line);border-radius:16px;padding:22px;
+  display:flex;flex-direction:column;justify-content:space-between;min-height:215px
+}
+.mini-metric .number{font-size:clamp(42px,5vw,60px);line-height:1;letter-spacing:-.06em;font-weight:500;color:#26212d}
+.mini-metric p{margin:10px 0 0;color:#6a6270;font-size:14px;line-height:1.7}
+.numbers-accent{color:var(--accent)}
+.analysis-grid{display:grid;grid-template-columns:minmax(0,1.15fr) .85fr;gap:22px;align-items:start}
+.stack-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}
+.end-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:22px;align-items:start}
+.panel{
+  min-width:0;background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:16px 16px 8px;
+  box-shadow:0 10px 25px rgba(64,47,59,.035)
+}
+.panel.wide-panel{padding-bottom:10px}
+.panel-head{display:flex;justify-content:space-between;gap:20px;align-items:end;padding:6px 8px 10px}
+.panel-head .eyebrow{margin:0;color:var(--warm);font-size:11px;letter-spacing:.18em;text-transform:uppercase}
+.panel-head h3{margin:6px 0 0;font-size:28px;letter-spacing:-.05em;font-weight:600;line-height:1.04}
+.panel-head p{margin:0;color:var(--muted);font-size:13px;line-height:1.6;max-width:32ch;text-align:right}
+.chart-panel .plotly-graph-div{width:100%!important;height:390px!important}
+.wide-panel .plotly-graph-div{height:420px!important}
+.product-panel .plotly-graph-div{height:360px!important}
+.prose-card{
+  background:transparent;border:none;padding:4px 8px 0 8px;box-shadow:none
+}
+.prose-card h3{margin:0 0 12px;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--warm);font-weight:600}
+.prose-card p{margin:0 0 14px;color:#645a67;font-size:15px;line-height:1.8}
+.prose-card p strong{color:#2d2530}
+.note-block{padding:24px 0 6px;border-top:1px solid var(--line);margin-top:18px}
+.note-block h2{margin:0 0 12px;font-size:26px;letter-spacing:-.04em;font-weight:600}
+.note-block p{max-width:900px;margin:0;color:#6b6270;font-size:15px;line-height:1.8}
+.footer-note{margin-top:28px;color:#8a7f8d;font-size:12px;line-height:1.8}
+.footer-note strong{color:#5e5261}
+.tag-row{display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end}
+.modebar{display:none!important}
+.js-plotly-plot .plotly .main-svg{border-radius:14px}
+@media (max-width:1200px){
+  .hero,.section-heading,.analysis-grid,.end-grid,.metrics-grid{grid-template-columns:1fr}
+  .stack-grid{grid-template-columns:1fr}
+  .hero-card{max-width:480px}
+  .panel-head{display:block}
+  .panel-head p{max-width:none;text-align:left;margin-top:8px}
+  .tag-row{justify-content:flex-start}
+}
+@media (max-width:920px){
+  .app-shell{grid-template-columns:1fr}
+  .sidebar{position:relative;height:auto}
+  main{padding:24px 22px 36px}
+  .hero h1{font-size:clamp(38px,11vw,58px)}
+}
+
+/* Funnel stage percentages, tied directly to the original counts. */
+.funnel-rates{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;border-top:1px solid var(--line);margin:4px 8px 12px}
+.funnel-rate{display:flex;flex-direction:column;gap:3px;padding:13px 12px;min-width:0;border-right:1px solid var(--line)}
+.funnel-rate:last-child{border-right:0}
+.rate-label{font-size:11px;letter-spacing:.10em;text-transform:uppercase;color:var(--muted)}
+.funnel-rate strong{font-size:21px;font-weight:600;letter-spacing:-.045em;color:var(--ink)}
+.rate-detail{font-size:12px;color:#bc497c;font-weight:600}
+@media(max-width:600px){.funnel-rates{grid-template-columns:1fr}.funnel-rate{border-right:0;border-bottom:1px solid var(--line)}.funnel-rate:last-child{border-bottom:0}}
+@media(max-width:1050px){.mini-stack{grid-template-columns:1fr 1fr}.featured-metric{grid-template-columns:1fr;gap:12px}.featured-metric .subcopy{max-width:65ch}}
+@media(max-width:640px){.mini-stack{grid-template-columns:1fr}.featured-metric .big-number{font-size:clamp(60px,17vw,90px)}}
+
+/* Editorial funnel: directly comparable step-conversion percentages */
+.funnel-progression{padding:25px 28px 26px}
+.funnel-explainer{display:grid;gap:29px;font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Helvetica,Arial,sans-serif}
+.funnel-stage-head{display:flex;justify-content:space-between;align-items:baseline;gap:14px;margin-bottom:12px}
+.funnel-stage-head span{color:#403741;font-size:15px;font-weight:500}
+.funnel-stage-head strong{color:#29242e;font-size:25px;letter-spacing:-.045em;font-weight:600;font-variant-numeric:tabular-nums}
+.funnel-track{height:19px;overflow:hidden;border-radius:999px;background:#f0e6ea;box-shadow:inset 0 0 0 1px #eadfe3}
+.funnel-fill{height:100%;border-radius:999px;background:#d9bbc7;min-width:0}
+.funnel-fill.cart{background:#d48aaa}
+.funnel-fill.purchase{background:#e65d94}
+.funnel-foot{margin-top:10px;display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap;color:#746a78;font-size:13px}
+.funnel-foot b{color:#332a34;font-weight:600}
+.funnel-foot .loss{color:#ad4a72;font-weight:600}
+.funnel-baseline-note{border-top:1px solid #ebdfe3;padding-top:16px;color:#776b78;font-size:12px;line-height:1.65}
+@media(max-width:650px){.funnel-progression{padding:18px}.funnel-stage-head strong{font-size:20px}.funnel-stage-head span{font-size:13px}}
+
+.funnel-stage-head strong{font-variant-numeric:tabular-nums}.funnel-progression .funnel-track{position:relative}.funnel-progression .funnel-fill.cart,.funnel-progression .funnel-fill.purchase{min-width:0}.funnel-progression .funnel-track{height:22px}
+
+/* Final editorial refinement: quieter surfaces and less templated framing. */
+.hero-card{background:transparent;box-shadow:none;border:1px solid var(--line);border-radius:12px}
+.mini-metric{background:transparent;box-shadow:none;border:0;border-top:1px solid var(--line-strong);border-radius:0;min-height:0;padding:19px 3px 16px}
+.featured-metric{min-height:230px;box-shadow:none;background:#f9e7ee;border:0;border-radius:18px}
+.panel{border-radius:12px;box-shadow:none;border-color:#ebe1e4}
+.prose-card{padding-top:12px}
+.prose-card .takeaway{border-top:1px solid var(--line);padding:16px 0 12px}
+.prose-card .takeaway span{display:block;font-size:13px;color:var(--muted);letter-spacing:.02em}
+.prose-card .takeaway strong{display:block;font-size:40px;font-weight:500;line-height:1.2;letter-spacing:-.06em;color:var(--ink)}
+.prose-card .takeaway p{margin:2px 0 0;font-size:14px}
+.prose-card .method-ref{font-size:12px;color:var(--muted);margin-top:16px}
+.section-heading h2{font-size:clamp(23px,2.6vw,31px)}
+.section-heading p{max-width:32ch}
+</style>
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+</head>
+<body>
+<div class="app-shell">
+<aside aria-label="Report navigation" class="sidebar">
+<div class="brand">
+<div class="brand-mark"><span class="brand-badge">✦</span><h2>Customer Journey</h2></div>
+<small>Analytics case study</small>
+</div>
+<div>
+<p class="nav-label">Navigate</p>
+<nav>
+<a class="active" href="#overview"><i>•</i>Overview</a>
+<a href="#friction"><i>•</i>Primary friction</a>
+<a href="#funnel"><i>•</i>Funnel</a>
+<a href="#engagement-section"><i>•</i>Engagement</a>
+<a href="#trends"><i>•</i>Behaviour over time</a>
+<a href="#notes"><i>•</i>Notes</a>
+</nav>
+</div>
+<div class="sidebar-foot">
+<strong>Retailrocket dataset</strong>
+      Real observational customer-behaviour data<br/>
+      May–September 2015
+    </div>
+</aside>
+<main>
+<header class="topbar">
+<div>
+<p class="overline">Retail analytics case study</p>
+</div>
+<div class="top-meta">
+<span class="meta-pill">Portfolio project</span>
+<span class="meta-pill">Interactive Plotly report</span>
+</div>
+</header>
+<section class="hero" id="overview">
+<div>
+<h1>Where shoppers leave the journey.</h1>
+<p class="lead">Retailrocket customer behaviour, from product discovery to purchase and return visits.</p>
+</div>
+<aside aria-label="Study summary" class="hero-card">
+<div class="meta-row"><span class="label">Study period</span><span class="value date">May–Sep 2015</span></div>
+<div class="meta-row"><span class="label">Observed visitors</span><span class="value">1,407,580</span></div>
+<div class="meta-row"><span class="label">Ordered view-to-purchase rate</span><span class="value">0.71%</span></div>
+</aside>
+</section>
+<section class="section-block" id="friction">
+<div class="section-heading">
+<div>
+<h2>Two distinct points of friction</h2>
+</div>
+<p>97.65% leave before cart; 69.78% of cart-stage visitors do not reach purchase.</p>
+</div>
+<div class="metrics-grid">
+<article class="featured-metric">
+<div>
+<div class="kicker">Cart-to-purchase drop-off</div>
+<div class="big-number">69.78%</div>
+</div>
+<div class="subcopy">Nearly 7 in 10 visitors who added an item to their cart did not go on to make an observed purchase.</div>
+</article>
+<div class="mini-stack">
+<article class="mini-metric">
+<div>
+<h3>Observed visitors</h3>
+<div class="number">1.41M</div>
+<p>Unique visitor IDs observed in the dataset.</p>
+</div>
+</article>
+<article class="mini-metric">
+<div>
+<h3>Ordered view-to-purchase rate</h3>
+<div class="number">0.71%</div>
+<p>Ordered purchases among product viewers.</p>
+</div>
+</article>
+<article class="mini-metric">
+<div>
+<h3>Engagement gap</h3>
+<div class="number">0.524<span class="numbers-accent">pp</span></div>
+<p>Higher subsequent purchase rate for visitors active on 2+ days.</p>
+</div>
+</article>
+</div>
+</div>
+</section>
+<section class="section-block" id="funnel">
+<div class="section-heading">
+<div>
+<h2>From product view to purchase</h2>
+</div>
+<p>An ordered visitor funnel with every stage measured against product viewers.</p>
+</div>
+<div class="analysis-grid">
+<div>
+<div class="panel-head">
+<div>
+<p class="eyebrow">Each bar uses the same product-viewer baseline.</p>
+<h3>Ordered visitor funnel</h3>
+</div>
+<p>Stages are ordered by timestamp, so they reflect sequence in observed behaviour rather than a guaranteed single-session path.</p>
+</div>
+<div class="panel funnel-progression" id="visitor-funnel">
+<div aria-label="Ordered visitor funnel with a common baseline: 1,404,179 product viewers, 100%; 32,934 added to cart, 2.35% of product viewers; 9,952 subsequently purchased, 0.71% of product viewers. Of cart-stage visitors, 30.22% later purchased, while 69.78% did not." class="funnel-explainer" role="img">
+<div class="funnel-stage">
+<div class="funnel-stage-head"><span>01   Viewed a product</span><strong>1,404,179</strong></div>
+<div class="funnel-track baseline"><div class="funnel-fill" style="width:100%"></div></div>
+<div class="funnel-foot">100% of product-viewing visitors</div>
+</div>
+<div class="funnel-transition">
+<div class="funnel-stage-head"><span>02   Added to cart</span><strong>32,934</strong></div>
+<div class="funnel-track"><div class="funnel-fill cart" style="width:2.35%"></div></div>
+<div class="funnel-foot"><span><b>2.35%</b> of original product viewers</span><span class="loss">97.65% did not progress to cart</span></div>
+</div>
+<div class="funnel-transition">
+<div class="funnel-stage-head"><span>03   Purchased after cart</span><strong>9,952</strong></div>
+<div class="funnel-track"><div class="funnel-fill purchase" style="width:0.71%"></div></div>
+<div class="funnel-foot"><span><b>0.71%</b> of original product viewers</span><span class="loss">30.22% of cart-stage visitors later purchased</span></div>
+</div>
+<div class="funnel-baseline-note">All bar lengths use the same denominator: 1,404,179 product-viewing visitors. Conditional progression: 2.35% of viewers reached cart; 30.22% of cart-stage visitors later purchased (69.78% cart-to-purchase drop-off). Stages are timestamp-ordered observations, not verified same-session checkouts.</div>
+</div>
+</div>
+</div>
+<article class="prose-card"><h3>Where the losses occur</h3>
+<div class="takeaway"><span>View → cart</span><strong>97.65%</strong><p>Largest proportional drop-off.</p></div>
+<div class="takeaway"><span>Cart → purchase</span><strong>69.78%</strong><p>A second opportunity after cart engagement.</p></div>
+<p class="method-ref">Stage definitions, time-ordering and observational limitations are documented in the method notes below.</p></article>
+</div>
+</section>
+<section class="section-block" id="engagement-section">
+<div class="section-heading">
+<div>
+<h2>Does repeat engagement matter?</h2>
+</div>
+</div>
+<div class="stack-grid">
+<div>
+<div class="panel-head">
+<div>
+<p class="eyebrow">30-day purchase rate by early active days.</p>
+<h3>Subsequent purchase rate by early engagement</h3>
+</div>
+<p>Multi-day engagement is associated with a higher 30-day purchase rate, but the relationship should be interpreted as associative rather than causal.</p>
+</div>
+<div class="panel chart-panel" id="engagement"><div> <div class="plotly-graph-div" id="019d0948-f6f4-4834-a044-e5547cb5a040" style="height:380px; width:100%;"></div> <script type="text/javascript">                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("019d0948-f6f4-4834-a044-e5547cb5a040")) {                    Plotly.newPlot(                        "019d0948-f6f4-4834-a044-e5547cb5a040",                        [{"error_y":{"array":{"dtype":"f8","bdata":"GPVPaIcscz+wvU0itSWwPw=="},"arrayminus":{"dtype":"f8","bdata":"4MVngFqccT\u002fAUB\u002fwoCCtPw=="},"symmetric":false,"type":"data"},"marker":{"color":["#ed6398","#b58bdf"]},"text":["0.053%","0.577%"],"textposition":"outside","x":["1 active day","2+ active days"],"y":{"dtype":"f8","bdata":"B59Dc8H8qj82K9tyiXTiPw=="},"type":"bar"}],                        {"font":{"color":"#4a3b49","family":"Arial"},"height":380,"hoverlabel":{"bgcolor":"#fff0f5"},"margin":{"b":45,"l":50,"r":25,"t":45},"paper_bgcolor":"#ffffff","plot_bgcolor":"#ffffff","template":{"data":{"barpolar":[{"marker":{"line":{"color":"rgb(255,255,255)","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"bar":[{"error_x":{"color":"#544753"},"error_y":{"color":"#544753"},"marker":{"line":{"color":"rgb(255,255,255)","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"carpet":[{"aaxis":{"endlinecolor":"#dec5d3","gridcolor":"#e5ccd8","linecolor":"#e5ccd8","minorgridcolor":"#e5ccd8","startlinecolor":"#dec5d3"},"baxis":{"endlinecolor":"#dec5d3","gridcolor":"#e5ccd8","linecolor":"#e5ccd8","minorgridcolor":"#e5ccd8","startlinecolor":"#dec5d3"},"type":"carpet"}],"choropleth":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"choropleth"}],"contourcarpet":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"contourcarpet"}],"contour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"contour"}],"heatmap":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmap"}],"histogram2dcontour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2dcontour"}],"histogram2d":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2d"}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"mesh3d":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"mesh3d"}],"parcoords":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"parcoords"}],"pie":[{"automargin":true,"type":"pie"}],"scatter3d":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatter3d"}],"scattercarpet":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattercarpet"}],"scattergeo":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergeo"}],"scattergl":[{"marker":{"line":{"color":"#f3e6ec"}},"type":"scattergl"}],"scattermapbox":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermapbox"}],"scattermap":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermap"}],"scatterpolargl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolargl"}],"scatterpolar":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolar"}],"scatter":[{"marker":{"line":{"color":"#f3e6ec"}},"type":"scatter"}],"scatterternary":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterternary"}],"surface":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"surface"}],"table":[{"cells":{"fill":{"color":"#e5ccd8"},"line":{"color":"rgb(255,255,255)"}},"header":{"fill":{"color":"#f6e4ec"},"line":{"color":"rgb(255,255,255)"}},"type":"table"}]},"layout":{"annotationdefaults":{"arrowcolor":"#544753","arrowhead":0,"arrowwidth":1},"autotypenumbers":"strict","coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]],"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]},"colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#544753"},"geo":{"bgcolor":"rgb(255,255,255)","lakecolor":"rgb(255,255,255)","landcolor":"rgb(255,255,255)","showlakes":true,"showland":true,"subunitcolor":"#e5ccd8"},"hoverlabel":{"align":"left"},"hovermode":"closest","mapbox":{"style":"dark"},"paper_bgcolor":"rgb(255,255,255)","plot_bgcolor":"rgb(255,255,255)","polar":{"angularaxis":{"gridcolor":"#e5ccd8","linecolor":"#e5ccd8","ticks":""},"bgcolor":"rgb(255,255,255)","radialaxis":{"gridcolor":"#e5ccd8","linecolor":"#e5ccd8","ticks":""}},"scene":{"xaxis":{"backgroundcolor":"rgb(255,255,255)","gridcolor":"#e5ccd8","gridwidth":2,"linecolor":"#e5ccd8","showbackground":true,"ticks":"","zerolinecolor":"#eddce5"},"yaxis":{"backgroundcolor":"rgb(255,255,255)","gridcolor":"#e5ccd8","gridwidth":2,"linecolor":"#e5ccd8","showbackground":true,"ticks":"","zerolinecolor":"#eddce5"},"zaxis":{"backgroundcolor":"rgb(255,255,255)","gridcolor":"#e5ccd8","gridwidth":2,"linecolor":"#e5ccd8","showbackground":true,"ticks":"","zerolinecolor":"#eddce5"}},"shapedefaults":{"line":{"color":"#544753"}},"sliderdefaults":{"bgcolor":"#eddce5","bordercolor":"rgb(255,255,255)","borderwidth":1,"tickwidth":0},"ternary":{"aaxis":{"gridcolor":"#e5ccd8","linecolor":"#e5ccd8","ticks":""},"baxis":{"gridcolor":"#e5ccd8","linecolor":"#e5ccd8","ticks":""},"bgcolor":"rgb(255,255,255)","caxis":{"gridcolor":"#e5ccd8","linecolor":"#e5ccd8","ticks":""}},"title":{"x":0.05},"updatemenudefaults":{"bgcolor":"#e5ccd8","borderwidth":0},"xaxis":{"automargin":true,"gridcolor":"#f3e6ec","linecolor":"#e5ccd8","ticks":"","title":{"standoff":15},"zerolinecolor":"#f3e6ec","zerolinewidth":2},"yaxis":{"automargin":true,"gridcolor":"#f3e6ec","linecolor":"#e5ccd8","ticks":"","title":{"standoff":15},"zerolinecolor":"#f3e6ec","zerolinewidth":2}}},"title":{"text":"Subsequent 30-day purchase rate by early engagement"},"yaxis":{"title":{"text":"Purchase rate (%)"}}},                        {"displaylogo": false, "responsive": true}                    )                };            </script> </div></div>
+</div>
+<div>
+<div class="panel-head">
+<div>
+<p class="eyebrow">Observed returns across D1, D7 and D30.</p>
+<h3>Observed return activity by cohort</h3>
+</div>
+<p>The cohort chart helps show how first-observed visitors return over 1-day, 7-day, and 30-day windows.</p>
+</div>
+<div class="panel chart-panel" id="retention"><div> <div class="plotly-graph-div" id="533911b5-e9a9-47eb-b7ba-684f65915df4" style="height:380px; width:100%;"></div> <script type="text/javascript">                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("533911b5-e9a9-47eb-b7ba-684f65915df4")) {                    Plotly.newPlot(                        "533911b5-e9a9-47eb-b7ba-684f65915df4",                        [{"marker":{"color":"#ed6398"},"mode":"lines+markers","name":"D1","x":["2015-04-27T00:00:00","2015-05-04T00:00:00","2015-05-11T00:00:00","2015-05-18T00:00:00","2015-05-25T00:00:00","2015-06-01T00:00:00","2015-06-08T00:00:00","2015-06-15T00:00:00","2015-06-22T00:00:00","2015-06-29T00:00:00","2015-07-06T00:00:00","2015-07-13T00:00:00","2015-07-20T00:00:00","2015-07-27T00:00:00","2015-08-03T00:00:00","2015-08-10T00:00:00","2015-08-17T00:00:00","2015-08-24T00:00:00","2015-08-31T00:00:00","2015-09-07T00:00:00","2015-09-14T00:00:00"],"y":{"dtype":"f8","bdata":"TGnFR\u002fuYFEAR3uLrfNwKQJp0F1jO8AhAnb+2SnVZBkBrObmJNQMGQM\u002fhv+l3sgZAIMNgOMwFBkDUrt1SvHwHQPwI7iO4jwZAbuw99N38BUBMuTlqVvIDQDZcRx32vAJApWN2Q+EgCEDd4uZhl6gEQBHROcIiDARAIwwIqfoeBEAlbit0i84FQDisLZh\u002fOQZA\u002fex8sNYZBUB3x6hzHiIGQNCap8BVCwBA"},"type":"scatter"},{"marker":{"color":"#b58bdf"},"mode":"lines+markers","name":"D7","x":["2015-04-27T00:00:00","2015-05-04T00:00:00","2015-05-11T00:00:00","2015-05-18T00:00:00","2015-05-25T00:00:00","2015-06-01T00:00:00","2015-06-08T00:00:00","2015-06-15T00:00:00","2015-06-22T00:00:00","2015-06-29T00:00:00","2015-07-06T00:00:00","2015-07-13T00:00:00","2015-07-20T00:00:00","2015-07-27T00:00:00","2015-08-03T00:00:00","2015-08-10T00:00:00","2015-08-17T00:00:00","2015-08-24T00:00:00","2015-08-31T00:00:00","2015-09-07T00:00:00"],"y":{"dtype":"f8","bdata":"ztD5rZcs9j9okFqtMjzxP7cP\u002fafNNeg\u002fj262PVLP4j\u002fT8rZORZLiP\u002f7M29A6E+E\u002fQ0+skyc54z9CSCPaEFDjP3sK6ymsp+A\u002fDrkhVZ404z+WAs5U3G3dPxHOFQbne+A\u002fRp+AG34i3D\u002fFhLTBUo7dPwqqVF8MJt4\u002fe1ixQtFd3T9pvSoZgXngP3zlkjP+\u002ftw\u002f6qnfiKu84D9xlnaUHFfXPw=="},"type":"scatter"},{"marker":{"color":"#f5ae80"},"mode":"lines+markers","name":"D30","x":["2015-04-27T00:00:00","2015-05-04T00:00:00","2015-05-11T00:00:00","2015-05-18T00:00:00","2015-05-25T00:00:00","2015-06-01T00:00:00","2015-06-08T00:00:00","2015-06-15T00:00:00","2015-06-22T00:00:00","2015-06-29T00:00:00","2015-07-06T00:00:00","2015-07-13T00:00:00","2015-07-20T00:00:00","2015-07-27T00:00:00","2015-08-03T00:00:00","2015-08-10T00:00:00","2015-08-17T00:00:00"],"y":{"dtype":"f8","bdata":"MOqNuKob3j9qD64p7cjVPydSKa9XNcc\u002fHl5NXlKqxz+E0h6ByMzEP1gV1cJiPsQ\u002fIJfdpme4yj99\u002fsu2hszBP24iu4nsJsI\u002faibE0wQZxD+CfFChnFy8Py+\u002fmQAxsbo\u002fzXj20IStwD+0JArSLW6+P9hg\u002fExbLME\u002fRJt6c10RvT\u002fPZpSyMqSrPw=="},"type":"scatter"}],                        {"font":{"color":"#4a3b49","family":"Arial"},"height":380,"hoverlabel":{"bgcolor":"#fff0f5"},"hovermode":"x unified","margin":{"b":45,"l":50,"r":25,"t":45},"paper_bgcolor":"#ffffff","plot_bgcolor":"#ffffff","template":{"data":{"barpolar":[{"marker":{"line":{"color":"rgb(255,255,255)","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"bar":[{"error_x":{"color":"#544753"},"error_y":{"color":"#544753"},"marker":{"line":{"color":"rgb(255,255,255)","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"carpet":[{"aaxis":{"endlinecolor":"#dec5d3","gridcolor":"#e5ccd8","linecolor":"#e5ccd8","minorgridcolor":"#e5ccd8","startlinecolor":"#dec5d3"},"baxis":{"endlinecolor":"#dec5d3","gridcolor":"#e5ccd8","linecolor":"#e5ccd8","minorgridcolor":"#e5ccd8","startlinecolor":"#dec5d3"},"type":"carpet"}],"choropleth":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"choropleth"}],"contourcarpet":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"contourcarpet"}],"contour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"contour"}],"heatmap":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmap"}],"histogram2dcontour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2dcontour"}],"histogram2d":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2d"}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"mesh3d":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"mesh3d"}],"parcoords":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"parcoords"}],"pie":[{"automargin":true,"type":"pie"}],"scatter3d":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatter3d"}],"scattercarpet":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattercarpet"}],"scattergeo":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergeo"}],"scattergl":[{"marker":{"line":{"color":"#f3e6ec"}},"type":"scattergl"}],"scattermapbox":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermapbox"}],"scattermap":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermap"}],"scatterpolargl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolargl"}],"scatterpolar":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolar"}],"scatter":[{"marker":{"line":{"color":"#f3e6ec"}},"type":"scatter"}],"scatterternary":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterternary"}],"surface":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"surface"}],"table":[{"cells":{"fill":{"color":"#e5ccd8"},"line":{"color":"rgb(255,255,255)"}},"header":{"fill":{"color":"#f6e4ec"},"line":{"color":"rgb(255,255,255)"}},"type":"table"}]},"layout":{"annotationdefaults":{"arrowcolor":"#544753","arrowhead":0,"arrowwidth":1},"autotypenumbers":"strict","coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]],"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]},"colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#544753"},"geo":{"bgcolor":"rgb(255,255,255)","lakecolor":"rgb(255,255,255)","landcolor":"rgb(255,255,255)","showlakes":true,"showland":true,"subunitcolor":"#e5ccd8"},"hoverlabel":{"align":"left"},"hovermode":"closest","mapbox":{"style":"dark"},"paper_bgcolor":"rgb(255,255,255)","plot_bgcolor":"rgb(255,255,255)","polar":{"angularaxis":{"gridcolor":"#e5ccd8","linecolor":"#e5ccd8","ticks":""},"bgcolor":"rgb(255,255,255)","radialaxis":{"gridcolor":"#e5ccd8","linecolor":"#e5ccd8","ticks":""}},"scene":{"xaxis":{"backgroundcolor":"rgb(255,255,255)","gridcolor":"#e5ccd8","gridwidth":2,"linecolor":"#e5ccd8","showbackground":true,"ticks":"","zerolinecolor":"#eddce5"},"yaxis":{"backgroundcolor":"rgb(255,255,255)","gridcolor":"#e5ccd8","gridwidth":2,"linecolor":"#e5ccd8","showbackground":true,"ticks":"","zerolinecolor":"#eddce5"},"zaxis":{"backgroundcolor":"rgb(255,255,255)","gridcolor":"#e5ccd8","gridwidth":2,"linecolor":"#e5ccd8","showbackground":true,"ticks":"","zerolinecolor":"#eddce5"}},"shapedefaults":{"line":{"color":"#544753"}},"sliderdefaults":{"bgcolor":"#eddce5","bordercolor":"rgb(255,255,255)","borderwidth":1,"tickwidth":0},"ternary":{"aaxis":{"gridcolor":"#e5ccd8","linecolor":"#e5ccd8","ticks":""},"baxis":{"gridcolor":"#e5ccd8","linecolor":"#e5ccd8","ticks":""},"bgcolor":"rgb(255,255,255)","caxis":{"gridcolor":"#e5ccd8","linecolor":"#e5ccd8","ticks":""}},"title":{"x":0.05},"updatemenudefaults":{"bgcolor":"#e5ccd8","borderwidth":0},"xaxis":{"automargin":true,"gridcolor":"#f3e6ec","linecolor":"#e5ccd8","ticks":"","title":{"standoff":15},"zerolinecolor":"#f3e6ec","zerolinewidth":2},"yaxis":{"automargin":true,"gridcolor":"#f3e6ec","linecolor":"#e5ccd8","ticks":"","title":{"standoff":15},"zerolinecolor":"#f3e6ec","zerolinewidth":2}}},"title":{"text":"First-observed cohorts: observed return activity"},"yaxis":{"title":{"text":"Return rate (%)"}}},                        {"displaylogo": false, "responsive": true}                    )                };            </script> </div></div>
+</div>
+</div>
+</section>
+<section class="section-block" id="trends">
+<div class="section-heading">
+<div>
+<h2>Traffic and product interest</h2>
+</div>
+<p>Event volumes and the products receiving the most views.</p>
+</div>
+<div class="end-grid">
+<div>
+<div class="panel-head">
+<div>
+<p class="eyebrow">Views, cart events and transactions by day.</p>
+<h3>Daily behavioural events</h3>
+</div>
+<p>Views, add-to-carts, and transactions are plotted together so the imbalance between browsing and purchase activity is easy to compare over time.</p>
+</div>
+<div class="panel chart-panel wide-panel" id="event-trends"><div> <div class="plotly-graph-div" id="7dac6741-6290-4d3d-bd11-10f19b7b2ecb" style="height:380px; width:100%;"></div> <script type="text/javascript">                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("7dac6741-6290-4d3d-bd11-10f19b7b2ecb")) {                    Plotly.newPlot(                        "7dac6741-6290-4d3d-bd11-10f19b7b2ecb",                        [{"line":{"color":"#ed6398"},"mode":"lines","name":"view","x":["2015-05-03T00:00:00","2015-05-04T00:00:00","2015-05-05T00:00:00","2015-05-06T00:00:00","2015-05-07T00:00:00","2015-05-08T00:00:00","2015-05-09T00:00:00","2015-05-10T00:00:00","2015-05-11T00:00:00","2015-05-12T00:00:00","2015-05-13T00:00:00","2015-05-14T00:00:00","2015-05-15T00:00:00","2015-05-16T00:00:00","2015-05-17T00:00:00","2015-05-18T00:00:00","2015-05-19T00:00:00","2015-05-20T00:00:00","2015-05-21T00:00:00","2015-05-22T00:00:00","2015-05-23T00:00:00","2015-05-24T00:00:00","2015-05-25T00:00:00","2015-05-26T00:00:00","2015-05-27T00:00:00","2015-05-28T00:00:00","2015-05-29T00:00:00","2015-05-30T00:00:00","2015-05-31T00:00:00","2015-06-01T00:00:00","2015-06-02T00:00:00","2015-06-03T00:00:00","2015-06-04T00:00:00","2015-06-05T00:00:00","2015-06-06T00:00:00","2015-06-07T00:00:00","2015-06-08T00:00:00","2015-06-09T00:00:00","2015-06-10T00:00:00","2015-06-11T00:00:00","2015-06-12T00:00:00","2015-06-13T00:00:00","2015-06-14T00:00:00","2015-06-15T00:00:00","2015-06-16T00:00:00","2015-06-17T00:00:00","2015-06-18T00:00:00","2015-06-19T00:00:00","2015-06-20T00:00:00","2015-06-21T00:00:00","2015-06-22T00:00:00","2015-06-23T00:00:00","2015-06-24T00:00:00","2015-06-25T00:00:00","2015-06-26T00:00:00","2015-06-27T00:00:00","2015-06-28T00:00:00","2015-06-29T00:00:00","2015-06-30T00:00:00","2015-07-01T00:00:00","2015-07-02T00:00:00","2015-07-03T00:00:00","2015-07-04T00:00:00","2015-07-05T00:00:00","2015-07-06T00:00:00","2015-07-07T00:00:00","2015-07-08T00:00:00","2015-07-09T00:00:00","2015-07-10T00:00:00","2015-07-11T00:00:00","2015-07-12T00:00:00","2015-07-13T00:00:00","2015-07-14T00:00:00","2015-07-15T00:00:00","2015-07-16T00:00:00","2015-07-17T00:00:00","2015-07-18T00:00:00","2015-07-19T00:00:00","2015-07-20T00:00:00","2015-07-21T00:00:00","2015-07-22T00:00:00","2015-07-23T00:00:00","2015-07-24T00:00:00","2015-07-25T00:00:00","2015-07-26T00:00:00","2015-07-27T00:00:00","2015-07-28T00:00:00","2015-07-29T00:00:00","2015-07-30T00:00:00","2015-07-31T00:00:00","2015-08-01T00:00:00","2015-08-02T00:00:00","2015-08-03T00:00:00","2015-08-04T00:00:00","2015-08-05T00:00:00","2015-08-06T00:00:00","2015-08-07T00:00:00","2015-08-08T00:00:00","2015-08-09T00:00:00","2015-08-10T00:00:00","2015-08-11T00:00:00","2015-08-12T00:00:00","2015-08-13T00:00:00","2015-08-14T00:00:00","2015-08-15T00:00:00","2015-08-16T00:00:00","2015-08-17T00:00:00","2015-08-18T00:00:00","2015-08-19T00:00:00","2015-08-20T00:00:00","2015-08-21T00:00:00","2015-08-22T00:00:00","2015-08-23T00:00:00","2015-08-24T00:00:00","2015-08-25T00:00:00","2015-08-26T00:00:00","2015-08-27T00:00:00","2015-08-28T00:00:00","2015-08-29T00:00:00","2015-08-30T00:00:00","2015-08-31T00:00:00","2015-09-01T00:00:00","2015-09-02T00:00:00","2015-09-03T00:00:00","2015-09-04T00:00:00","2015-09-05T00:00:00","2015-09-06T00:00:00","2015-09-07T00:00:00","2015-09-08T00:00:00","2015-09-09T00:00:00","2015-09-10T00:00:00","2015-09-11T00:00:00","2015-09-12T00:00:00","2015-09-13T00:00:00","2015-09-14T00:00:00","2015-09-15T00:00:00","2015-09-16T00:00:00","2015-09-17T00:00:00","2015-09-18T00:00:00"],"y":{"dtype":"i2","bdata":"+DP5SNFW51lhV05JQTD7LVg9a1S\u002fWb9a+lNOSfhOTWZdZbhUAVLeT0I+v0FCWuZS21LfUixKZzxMPjpWTVj4WCRZ9U4\u002fPVM98E4mWq5aH09DPJwuezXLUydcpFmCV\u002fpNzTpxO75XzVjPUmVMEUumOnxB8VYVUXlON1GjTvk8RTtQVKtbFV4wXjdXX0\u002fdUJJil2VBWylRj0x0Prw\u002fNV+5WClT5lA5VrdnTn3ma\u002fpROlfhTjhHlDqhORZQ1k9WTNVMikirMNIxbEUaRYNLIkg6QLsy0TY8TjROgEs4SBRD+TUJNXFGSkocR5pJxknFOMU8TkaoRFFCLUTlQpY2LDdYSr9OA1J\u002fVcBQsDr1PzxP2kwOK2YmxwU="},"type":"scatter"},{"line":{"color":"#b58bdf"},"mode":"lines","name":"addtocart","x":["2015-05-03T00:00:00","2015-05-04T00:00:00","2015-05-05T00:00:00","2015-05-06T00:00:00","2015-05-07T00:00:00","2015-05-08T00:00:00","2015-05-09T00:00:00","2015-05-10T00:00:00","2015-05-11T00:00:00","2015-05-12T00:00:00","2015-05-13T00:00:00","2015-05-14T00:00:00","2015-05-15T00:00:00","2015-05-16T00:00:00","2015-05-17T00:00:00","2015-05-18T00:00:00","2015-05-19T00:00:00","2015-05-20T00:00:00","2015-05-21T00:00:00","2015-05-22T00:00:00","2015-05-23T00:00:00","2015-05-24T00:00:00","2015-05-25T00:00:00","2015-05-26T00:00:00","2015-05-27T00:00:00","2015-05-28T00:00:00","2015-05-29T00:00:00","2015-05-30T00:00:00","2015-05-31T00:00:00","2015-06-01T00:00:00","2015-06-02T00:00:00","2015-06-03T00:00:00","2015-06-04T00:00:00","2015-06-05T00:00:00","2015-06-06T00:00:00","2015-06-07T00:00:00","2015-06-08T00:00:00","2015-06-09T00:00:00","2015-06-10T00:00:00","2015-06-11T00:00:00","2015-06-12T00:00:00","2015-06-13T00:00:00","2015-06-14T00:00:00","2015-06-15T00:00:00","2015-06-16T00:00:00","2015-06-17T00:00:00","2015-06-18T00:00:00","2015-06-19T00:00:00","2015-06-20T00:00:00","2015-06-21T00:00:00","2015-06-22T00:00:00","2015-06-23T00:00:00","2015-06-24T00:00:00","2015-06-25T00:00:00","2015-06-26T00:00:00","2015-06-27T00:00:00","2015-06-28T00:00:00","2015-06-29T00:00:00","2015-06-30T00:00:00","2015-07-01T00:00:00","2015-07-02T00:00:00","2015-07-03T00:00:00","2015-07-04T00:00:00","2015-07-05T00:00:00","2015-07-06T00:00:00","2015-07-07T00:00:00","2015-07-08T00:00:00","2015-07-09T00:00:00","2015-07-10T00:00:00","2015-07-11T00:00:00","2015-07-12T00:00:00","2015-07-13T00:00:00","2015-07-14T00:00:00","2015-07-15T00:00:00","2015-07-16T00:00:00","2015-07-17T00:00:00","2015-07-18T00:00:00","2015-07-19T00:00:00","2015-07-20T00:00:00","2015-07-21T00:00:00","2015-07-22T00:00:00","2015-07-23T00:00:00","2015-07-24T00:00:00","2015-07-25T00:00:00","2015-07-26T00:00:00","2015-07-27T00:00:00","2015-07-28T00:00:00","2015-07-29T00:00:00","2015-07-30T00:00:00","2015-07-31T00:00:00","2015-08-01T00:00:00","2015-08-02T00:00:00","2015-08-03T00:00:00","2015-08-04T00:00:00","2015-08-05T00:00:00","2015-08-06T00:00:00","2015-08-07T00:00:00","2015-08-08T00:00:00","2015-08-09T00:00:00","2015-08-10T00:00:00","2015-08-11T00:00:00","2015-08-12T00:00:00","2015-08-13T00:00:00","2015-08-14T00:00:00","2015-08-15T00:00:00","2015-08-16T00:00:00","2015-08-17T00:00:00","2015-08-18T00:00:00","2015-08-19T00:00:00","2015-08-20T00:00:00","2015-08-21T00:00:00","2015-08-22T00:00:00","2015-08-23T00:00:00","2015-08-24T00:00:00","2015-08-25T00:00:00","2015-08-26T00:00:00","2015-08-27T00:00:00","2015-08-28T00:00:00","2015-08-29T00:00:00","2015-08-30T00:00:00","2015-08-31T00:00:00","2015-09-01T00:00:00","2015-09-02T00:00:00","2015-09-03T00:00:00","2015-09-04T00:00:00","2015-09-05T00:00:00","2015-09-06T00:00:00","2015-09-07T00:00:00","2015-09-08T00:00:00","2015-09-09T00:00:00","2015-09-10T00:00:00","2015-09-11T00:00:00","2015-09-12T00:00:00","2015-09-13T00:00:00","2015-09-14T00:00:00","2015-09-15T00:00:00","2015-09-16T00:00:00","2015-09-17T00:00:00","2015-09-18T00:00:00"],"y":{"dtype":"i2","bdata":"KAFDAjUChwJCAhQCFwE4AYYBQQJIAp0C\u002fwGhAe4BigKOAqcBKALPAWUBQAFDAkUCEAJGAsEBwwFeAQoCDQJDAlwCxAF5AVoBHQLYAVcC9wFMARYBZAFwAiADqAK+Au0BlAFNAVYCeQJIAv4B4QF0AVYBDAIRAuAB0wHwAWwB3QEpAp8CswKmAoMCeQFPAZ0CegI0AmgCwAGPAXQB1wKhAgMDkQIhArcB4QGhAtECdgI3AiACgAFqATkCTAJyAhYCWQJLAS8BCwKDAS0CBAKmAVgBfQFtAhICHQIHAr4BVAFXARAC8gE5AgICNAJjAT8CxgG8AaUBwgHHATcBcwE8AvwBPgLgAXoCcgGOAdsBUwJQAf0AIgA="},"type":"scatter"},{"line":{"color":"#f5ae80"},"mode":"lines","name":"transaction","x":["2015-05-03T00:00:00","2015-05-04T00:00:00","2015-05-05T00:00:00","2015-05-06T00:00:00","2015-05-07T00:00:00","2015-05-08T00:00:00","2015-05-09T00:00:00","2015-05-10T00:00:00","2015-05-11T00:00:00","2015-05-12T00:00:00","2015-05-13T00:00:00","2015-05-14T00:00:00","2015-05-15T00:00:00","2015-05-16T00:00:00","2015-05-17T00:00:00","2015-05-18T00:00:00","2015-05-19T00:00:00","2015-05-20T00:00:00","2015-05-21T00:00:00","2015-05-22T00:00:00","2015-05-23T00:00:00","2015-05-24T00:00:00","2015-05-25T00:00:00","2015-05-26T00:00:00","2015-05-27T00:00:00","2015-05-28T00:00:00","2015-05-29T00:00:00","2015-05-30T00:00:00","2015-05-31T00:00:00","2015-06-01T00:00:00","2015-06-02T00:00:00","2015-06-03T00:00:00","2015-06-04T00:00:00","2015-06-05T00:00:00","2015-06-06T00:00:00","2015-06-07T00:00:00","2015-06-08T00:00:00","2015-06-09T00:00:00","2015-06-10T00:00:00","2015-06-11T00:00:00","2015-06-12T00:00:00","2015-06-13T00:00:00","2015-06-14T00:00:00","2015-06-15T00:00:00","2015-06-16T00:00:00","2015-06-17T00:00:00","2015-06-18T00:00:00","2015-06-19T00:00:00","2015-06-20T00:00:00","2015-06-21T00:00:00","2015-06-22T00:00:00","2015-06-23T00:00:00","2015-06-24T00:00:00","2015-06-25T00:00:00","2015-06-26T00:00:00","2015-06-27T00:00:00","2015-06-28T00:00:00","2015-06-29T00:00:00","2015-06-30T00:00:00","2015-07-01T00:00:00","2015-07-02T00:00:00","2015-07-03T00:00:00","2015-07-04T00:00:00","2015-07-05T00:00:00","2015-07-06T00:00:00","2015-07-07T00:00:00","2015-07-08T00:00:00","2015-07-09T00:00:00","2015-07-10T00:00:00","2015-07-11T00:00:00","2015-07-12T00:00:00","2015-07-13T00:00:00","2015-07-14T00:00:00","2015-07-15T00:00:00","2015-07-16T00:00:00","2015-07-17T00:00:00","2015-07-18T00:00:00","2015-07-19T00:00:00","2015-07-20T00:00:00","2015-07-21T00:00:00","2015-07-22T00:00:00","2015-07-23T00:00:00","2015-07-24T00:00:00","2015-07-25T00:00:00","2015-07-26T00:00:00","2015-07-27T00:00:00","2015-07-28T00:00:00","2015-07-29T00:00:00","2015-07-30T00:00:00","2015-07-31T00:00:00","2015-08-01T00:00:00","2015-08-02T00:00:00","2015-08-03T00:00:00","2015-08-04T00:00:00","2015-08-05T00:00:00","2015-08-06T00:00:00","2015-08-07T00:00:00","2015-08-08T00:00:00","2015-08-09T00:00:00","2015-08-10T00:00:00","2015-08-11T00:00:00","2015-08-12T00:00:00","2015-08-13T00:00:00","2015-08-14T00:00:00","2015-08-15T00:00:00","2015-08-16T00:00:00","2015-08-17T00:00:00","2015-08-18T00:00:00","2015-08-19T00:00:00","2015-08-20T00:00:00","2015-08-21T00:00:00","2015-08-22T00:00:00","2015-08-23T00:00:00","2015-08-24T00:00:00","2015-08-25T00:00:00","2015-08-26T00:00:00","2015-08-27T00:00:00","2015-08-28T00:00:00","2015-08-29T00:00:00","2015-08-30T00:00:00","2015-08-31T00:00:00","2015-09-01T00:00:00","2015-09-02T00:00:00","2015-09-03T00:00:00","2015-09-04T00:00:00","2015-09-05T00:00:00","2015-09-06T00:00:00","2015-09-07T00:00:00","2015-09-08T00:00:00","2015-09-09T00:00:00","2015-09-10T00:00:00","2015-09-11T00:00:00","2015-09-12T00:00:00","2015-09-13T00:00:00","2015-09-14T00:00:00","2015-09-15T00:00:00","2015-09-16T00:00:00","2015-09-17T00:00:00","2015-09-18T00:00:00"],"y":{"dtype":"i2","bdata":"UwCaAOEAAgHZAH4APwA8AFQAugDQAAABuQCCAKkA9QDEAH0AgwCaAHEAYQCyAMIAxQDhAIkAdABjAMgAzgDMAM0AlQBoAGoAwACEANIAnQBrADwAbAC\u002fABQBDQHcAKYAbwBTAOoA+gCxAMwAsQBbAFkAywCiAMMAmwCbAHcAZADbAPcAAwHPALUAYgBbANgA5wDYAO8AiwBmAHQA6ADjAAsB6gCJAHQAkAALAREB8ADWAKYATwBpAMYA0QDtAH8ArwBDADwAgQCBAMMAsQBwAFwATgDRAMkA2wDQAIQAWwBeALMApQDNANIAmABNAJIArwCeAI0AigCZAFAATwC9AJQAwAC1ANMAZgBYAJoAngCJAC0ADwA="},"type":"scatter"}],                        {"font":{"color":"#4a3b49","family":"Arial"},"height":380,"hoverlabel":{"bgcolor":"#fff0f5"},"hovermode":"x unified","margin":{"b":45,"l":50,"r":25,"t":45},"paper_bgcolor":"#ffffff","plot_bgcolor":"#ffffff","template":{"data":{"barpolar":[{"marker":{"line":{"color":"rgb(255,255,255)","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"bar":[{"error_x":{"color":"#544753"},"error_y":{"color":"#544753"},"marker":{"line":{"color":"rgb(255,255,255)","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"carpet":[{"aaxis":{"endlinecolor":"#dec5d3","gridcolor":"#e5ccd8","linecolor":"#e5ccd8","minorgridcolor":"#e5ccd8","startlinecolor":"#dec5d3"},"baxis":{"endlinecolor":"#dec5d3","gridcolor":"#e5ccd8","linecolor":"#e5ccd8","minorgridcolor":"#e5ccd8","startlinecolor":"#dec5d3"},"type":"carpet"}],"choropleth":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"choropleth"}],"contourcarpet":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"contourcarpet"}],"contour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"contour"}],"heatmap":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmap"}],"histogram2dcontour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2dcontour"}],"histogram2d":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2d"}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"mesh3d":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"mesh3d"}],"parcoords":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"parcoords"}],"pie":[{"automargin":true,"type":"pie"}],"scatter3d":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatter3d"}],"scattercarpet":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattercarpet"}],"scattergeo":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergeo"}],"scattergl":[{"marker":{"line":{"color":"#f3e6ec"}},"type":"scattergl"}],"scattermapbox":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermapbox"}],"scattermap":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermap"}],"scatterpolargl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolargl"}],"scatterpolar":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolar"}],"scatter":[{"marker":{"line":{"color":"#f3e6ec"}},"type":"scatter"}],"scatterternary":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterternary"}],"surface":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"surface"}],"table":[{"cells":{"fill":{"color":"#e5ccd8"},"line":{"color":"rgb(255,255,255)"}},"header":{"fill":{"color":"#f6e4ec"},"line":{"color":"rgb(255,255,255)"}},"type":"table"}]},"layout":{"annotationdefaults":{"arrowcolor":"#544753","arrowhead":0,"arrowwidth":1},"autotypenumbers":"strict","coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]],"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]},"colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#544753"},"geo":{"bgcolor":"rgb(255,255,255)","lakecolor":"rgb(255,255,255)","landcolor":"rgb(255,255,255)","showlakes":true,"showland":true,"subunitcolor":"#e5ccd8"},"hoverlabel":{"align":"left"},"hovermode":"closest","mapbox":{"style":"dark"},"paper_bgcolor":"rgb(255,255,255)","plot_bgcolor":"rgb(255,255,255)","polar":{"angularaxis":{"gridcolor":"#e5ccd8","linecolor":"#e5ccd8","ticks":""},"bgcolor":"rgb(255,255,255)","radialaxis":{"gridcolor":"#e5ccd8","linecolor":"#e5ccd8","ticks":""}},"scene":{"xaxis":{"backgroundcolor":"rgb(255,255,255)","gridcolor":"#e5ccd8","gridwidth":2,"linecolor":"#e5ccd8","showbackground":true,"ticks":"","zerolinecolor":"#eddce5"},"yaxis":{"backgroundcolor":"rgb(255,255,255)","gridcolor":"#e5ccd8","gridwidth":2,"linecolor":"#e5ccd8","showbackground":true,"ticks":"","zerolinecolor":"#eddce5"},"zaxis":{"backgroundcolor":"rgb(255,255,255)","gridcolor":"#e5ccd8","gridwidth":2,"linecolor":"#e5ccd8","showbackground":true,"ticks":"","zerolinecolor":"#eddce5"}},"shapedefaults":{"line":{"color":"#544753"}},"sliderdefaults":{"bgcolor":"#eddce5","bordercolor":"rgb(255,255,255)","borderwidth":1,"tickwidth":0},"ternary":{"aaxis":{"gridcolor":"#e5ccd8","linecolor":"#e5ccd8","ticks":""},"baxis":{"gridcolor":"#e5ccd8","linecolor":"#e5ccd8","ticks":""},"bgcolor":"rgb(255,255,255)","caxis":{"gridcolor":"#e5ccd8","linecolor":"#e5ccd8","ticks":""}},"title":{"x":0.05},"updatemenudefaults":{"bgcolor":"#e5ccd8","borderwidth":0},"xaxis":{"automargin":true,"gridcolor":"#f3e6ec","linecolor":"#e5ccd8","ticks":"","title":{"standoff":15},"zerolinecolor":"#f3e6ec","zerolinewidth":2},"yaxis":{"automargin":true,"gridcolor":"#f3e6ec","linecolor":"#e5ccd8","ticks":"","title":{"standoff":15},"zerolinecolor":"#f3e6ec","zerolinewidth":2}}},"title":{"text":"Daily behavioural events"},"yaxis":{"title":{"text":"Number of events"}}},                        {"displaylogo": false, "responsive": true}                    )                };            </script> </div></div>
+</div>
+<div>
+<div class="panel-head">
+<div>
+<p class="eyebrow">Top item IDs ranked by observed views.</p>
+<h3>Most-viewed products</h3>
+</div>
+<p>Item popularity is event-based, which means it reflects observed product views rather than product-level conversion probability.</p>
+</div>
+<div class="panel chart-panel product-panel" id="extra-chart"><div> <div class="plotly-graph-div" id="d49b2bda-3918-4e88-aee8-5c74bf25a830" style="height:380px; width:100%;"></div> <script type="text/javascript">                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("d49b2bda-3918-4e88-aee8-5c74bf25a830")) {                    Plotly.newPlot(                        "d49b2bda-3918-4e88-aee8-5c74bf25a830",                        [{"customdata":{"dtype":"i2","bdata":"jQAhAGEALgAhAAsAJwALAAAAAABBAA8AWQAbADAADwAAAAAAAAAAADAADAAAAAAACQAAADIBhQACAAAA","shape":"15, 2"},"hovertemplate":"Item %{y}\u003cbr\u003eViews %{x:,}\u003cbr\u003eCarts %{customdata[0]}\u003cbr\u003ePurchases %{customdata[1]}\u003cextra\u003e\u003c\u002fextra\u003e","marker":{"color":"#ed6398"},"orientation":"h","x":{"dtype":"i2","bdata":"NQVCBW0FdQWUBfgF+wUdBmEGagbMBj4HFQnrCVIN"},"y":["320130","7943","441668","111530","335975","384302","257040","309778","96924","298009","219512","370653","5411","461686","187946"],"type":"bar"}],                        {"font":{"color":"#4a3b49","family":"Arial"},"height":380,"hoverlabel":{"bgcolor":"#fff0f5"},"margin":{"b":45,"l":50,"r":25,"t":45},"paper_bgcolor":"#ffffff","plot_bgcolor":"#ffffff","template":{"data":{"barpolar":[{"marker":{"line":{"color":"rgb(255,255,255)","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"bar":[{"error_x":{"color":"#544753"},"error_y":{"color":"#544753"},"marker":{"line":{"color":"rgb(255,255,255)","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"carpet":[{"aaxis":{"endlinecolor":"#dec5d3","gridcolor":"#e5ccd8","linecolor":"#e5ccd8","minorgridcolor":"#e5ccd8","startlinecolor":"#dec5d3"},"baxis":{"endlinecolor":"#dec5d3","gridcolor":"#e5ccd8","linecolor":"#e5ccd8","minorgridcolor":"#e5ccd8","startlinecolor":"#dec5d3"},"type":"carpet"}],"choropleth":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"choropleth"}],"contourcarpet":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"contourcarpet"}],"contour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"contour"}],"heatmap":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmap"}],"histogram2dcontour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2dcontour"}],"histogram2d":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2d"}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"mesh3d":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"mesh3d"}],"parcoords":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"parcoords"}],"pie":[{"automargin":true,"type":"pie"}],"scatter3d":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatter3d"}],"scattercarpet":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattercarpet"}],"scattergeo":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergeo"}],"scattergl":[{"marker":{"line":{"color":"#f3e6ec"}},"type":"scattergl"}],"scattermapbox":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermapbox"}],"scattermap":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermap"}],"scatterpolargl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolargl"}],"scatterpolar":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolar"}],"scatter":[{"marker":{"line":{"color":"#f3e6ec"}},"type":"scatter"}],"scatterternary":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterternary"}],"surface":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"surface"}],"table":[{"cells":{"fill":{"color":"#e5ccd8"},"line":{"color":"rgb(255,255,255)"}},"header":{"fill":{"color":"#f6e4ec"},"line":{"color":"rgb(255,255,255)"}},"type":"table"}]},"layout":{"annotationdefaults":{"arrowcolor":"#544753","arrowhead":0,"arrowwidth":1},"autotypenumbers":"strict","coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]],"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]},"colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#544753"},"geo":{"bgcolor":"rgb(255,255,255)","lakecolor":"rgb(255,255,255)","landcolor":"rgb(255,255,255)","showlakes":true,"showland":true,"subunitcolor":"#e5ccd8"},"hoverlabel":{"align":"left"},"hovermode":"closest","mapbox":{"style":"dark"},"paper_bgcolor":"rgb(255,255,255)","plot_bgcolor":"rgb(255,255,255)","polar":{"angularaxis":{"gridcolor":"#e5ccd8","linecolor":"#e5ccd8","ticks":""},"bgcolor":"rgb(255,255,255)","radialaxis":{"gridcolor":"#e5ccd8","linecolor":"#e5ccd8","ticks":""}},"scene":{"xaxis":{"backgroundcolor":"rgb(255,255,255)","gridcolor":"#e5ccd8","gridwidth":2,"linecolor":"#e5ccd8","showbackground":true,"ticks":"","zerolinecolor":"#eddce5"},"yaxis":{"backgroundcolor":"rgb(255,255,255)","gridcolor":"#e5ccd8","gridwidth":2,"linecolor":"#e5ccd8","showbackground":true,"ticks":"","zerolinecolor":"#eddce5"},"zaxis":{"backgroundcolor":"rgb(255,255,255)","gridcolor":"#e5ccd8","gridwidth":2,"linecolor":"#e5ccd8","showbackground":true,"ticks":"","zerolinecolor":"#eddce5"}},"shapedefaults":{"line":{"color":"#544753"}},"sliderdefaults":{"bgcolor":"#eddce5","bordercolor":"rgb(255,255,255)","borderwidth":1,"tickwidth":0},"ternary":{"aaxis":{"gridcolor":"#e5ccd8","linecolor":"#e5ccd8","ticks":""},"baxis":{"gridcolor":"#e5ccd8","linecolor":"#e5ccd8","ticks":""},"bgcolor":"rgb(255,255,255)","caxis":{"gridcolor":"#e5ccd8","linecolor":"#e5ccd8","ticks":""}},"title":{"x":0.05},"updatemenudefaults":{"bgcolor":"#e5ccd8","borderwidth":0},"xaxis":{"automargin":true,"gridcolor":"#f3e6ec","linecolor":"#e5ccd8","ticks":"","title":{"standoff":15},"zerolinecolor":"#f3e6ec","zerolinewidth":2},"yaxis":{"automargin":true,"gridcolor":"#f3e6ec","linecolor":"#e5ccd8","ticks":"","title":{"standoff":15},"zerolinecolor":"#f3e6ec","zerolinewidth":2}}},"title":{"text":"Most-viewed products (item IDs)"},"xaxis":{"title":{"text":"Views"}},"yaxis":{"title":{"text":"Item ID"}}},                        {"displaylogo": false, "responsive": true}                    )                };            </script> </div></div>
+</div>
+</div>
+</section>
+<section class="note-block" id="notes">
+<h2>Method notes</h2>
+<p>Stages in the ordered visitor funnel are based on timestamps; they do not imply a single session. First-observed visitor cohorts are not signup cohorts. Engagement groups use a pre-outcome observation window, but the conversion difference is associative, not causal. Item views and purchase counts are event-based, not unique product-buyer conversion probabilities. The dataset has no experiment assignments or verified revenue.</p>
+<div class="footer-note"><strong>Source:</strong> Retailrocket E-Commerce Dataset (Kaggle). The charts remain interactive; hover to inspect the original values.</div>
+</section>
+</main>
+</div>
+<script>
+window.addEventListener('load', function(){
+  if (typeof Plotly === 'undefined') return;
+  const fontFamily = '-apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif';
+  const common = {
+    paper_bgcolor: 'rgba(0,0,0,0)',
+    plot_bgcolor: 'rgba(0,0,0,0)',
+    font: {family: fontFamily, color: '#2e2632', size: 13},
+    margin: {l: 56, r: 24, t: 12, b: 42},
+    xaxis: {gridcolor: '#ece5e8', linecolor: '#d8ced1', zeroline: false, ticks: '', tickfont: {color:'#706674', size: 12}, automargin:true},
+    yaxis: {gridcolor: '#ece5e8', linecolor: '#d8ced1', zeroline: false, ticks: '', tickfont: {color:'#706674', size: 12}, automargin:true},
+    legend: {orientation: 'h', yanchor: 'bottom', y: 1.02, x: 0, font: {size: 12, color: '#706674'}},
+    hoverlabel: {bgcolor: '#fffdfd', bordercolor: '#dacccf', font: {family: fontFamily, color:'#2e2632'}}
+  };
+  const relayout = (id, extra) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    Plotly.relayout(el, Object.assign({}, common, extra || {}));
+  };
+  relayout('0f615fcc-bd95-4761-a645-60b96401710d', {
+    title: {text: ''},
+    margin: {l: 62, r: 24, t: 10, b: 54},
+    yaxis: {type: 'log', tickvals: [10000,100000,1000000], ticktext:['10k','100k','1M'], gridcolor:'#f0eaec', linecolor:'#d8ced1', zeroline:false, tickfont:{color:'#706674', size:12}, title:{text:'Distinct visitors', font:{size:12,color:'#706674'}}, automargin:true},
+    xaxis: {gridcolor:'rgba(0,0,0,0)', linecolor:'#d8ced1', tickfont:{color:'#4d4550', size:12}, title:{text:''}, automargin:true}
+  });
+  relayout('019d0948-f6f4-4834-a044-e5547cb5a040', {
+    title: {text: ''},
+    yaxis: {gridcolor:'#f0eaec', linecolor:'#d8ced1', tickfont:{color:'#706674', size:12}, title:{text:'Purchase rate (%)', font:{size:12,color:'#706674'}}, automargin:true},
+    xaxis: {gridcolor:'rgba(0,0,0,0)', linecolor:'#d8ced1', tickfont:{color:'#4d4550', size:12}, automargin:true},
+    showlegend:false
+  });
+  relayout('533911b5-e9a9-47eb-b7ba-684f65915df4', {
+    title: {text: ''},
+    yaxis: {gridcolor:'#f0eaec', linecolor:'#d8ced1', tickfont:{color:'#706674', size:12}, title:{text:'Return rate (%)', font:{size:12,color:'#706674'}}, automargin:true},
+    xaxis: {gridcolor:'rgba(0,0,0,0)', linecolor:'#d8ced1', tickfont:{color:'#4d4550', size:12}, tickformat:'%b %d', automargin:true}
+  });
+  relayout('7dac6741-6290-4d3d-bd11-10f19b7b2ecb', {
+    title: {text: ''},
+    yaxis: {gridcolor:'#f0eaec', linecolor:'#d8ced1', tickfont:{color:'#706674', size:12}, title:{text:'Number of events', font:{size:12,color:'#706674'}}, automargin:true},
+    xaxis: {gridcolor:'rgba(0,0,0,0)', linecolor:'#d8ced1', tickfont:{color:'#4d4550', size:12}, tickformat:'%b %d', automargin:true}
+  });
+  relayout('d49b2bda-3918-4e88-aee8-5c74bf25a830', {
+    title: {text: ''},
+    margin: {l: 58, r: 24, t: 10, b: 80},
+    xaxis: {gridcolor:'rgba(0,0,0,0)', linecolor:'#d8ced1', tickfont:{color:'#4d4550', size:11}, tickangle:-25, automargin:true},
+    yaxis: {gridcolor:'#f0eaec', linecolor:'#d8ced1', tickfont:{color:'#706674', size:12}, title:{text:'Views', font:{size:12,color:'#706674'}}, automargin:true},
+    showlegend:false
+  });
+});
+</script>
+</body>
+</html>
