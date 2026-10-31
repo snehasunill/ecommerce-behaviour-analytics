@@ -2,6 +2,8 @@
 
 **Python · SQL · DuckDB · pandas · SciPy · statsmodels**
 
+[**Explore the Interactive Dashboard**](https://snehasunill.github.io/ecommerce-behaviour-analytics/) | [**Read the Analysis**](reports/insights.md)
+
 An analysis of **2.76 million e-commerce interactions** to understand how shoppers progress from product views to carts and purchases, whether early repeat engagement is associated with later conversion, and what a product team should measure or test next.
 
 The project uses the public [Retailrocket E-Commerce Dataset](https://www.kaggle.com/datasets/retailrocket/ecommerce-dataset) (May–September 2015). It combines timestamp-ordered SQL funnels, first-observed visitor cohorts, statistical comparisons and an experiment proposal. The findings are **observational**, not evidence of causal product impact.
