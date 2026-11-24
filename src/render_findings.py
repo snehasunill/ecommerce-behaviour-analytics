@@ -33,9 +33,9 @@ def main():
     lines += [f'- Items with at least 100 observed view events: **{items:,}**.',
               '', '## Resume bullet candidates — verify these descriptions before using',
               f'- Analyzed **{counts[0]:,} e-commerce behavioral events** with DuckDB SQL, constructing an ordered visitor funnel that quantified **{f["cart_dropoff_pct"]:.2f}%** observed cart-stage non-progression.',
-              ('- Compared future purchase rates across first-week engagement groups with 95%% confidence intervals and logistic regression, measuring an observed **%+.3f-percentage-point** difference while separating predictors from subsequent outcomes.' % gap) if gap is not None else '- Investigated early engagement and future purchase with a disjoint observation/outcome window, Wilson confidence intervals, and logistic regression.',
+              ('- Compared future purchase rates across first-week engagement groups with a 95%% confidence interval for the difference in proportions, measuring an observed **%+.3f-percentage-point** difference while separating predictors from subsequent outcomes.' % gap) if gap is not None else '- Investigated early engagement and future purchase with disjoint observation/outcome windows and confidence intervals for observed purchase rates.',
               f'- Produced **5 Tableau-ready analytical datasets** spanning funnel, engagement, cohort return, temporal trends, and item performance; evaluated **{items:,}** adequately supported items and documented a checkout A/B test proposal (not conducted).',
-              '', 'Dashboard status: CSV exports generated; Tableau visualization still requires manual authoring/publication.',
+              '', 'Dashboard status: Interactive Plotly website published at https://snehasunill.github.io/ecommerce-behaviour-analytics/; Tableau-ready CSV exports generated, but no Tableau dashboard has been published.',
               'No experiment was run, and no actual improvement in conversion is claimed.',
               '']
     path=ROOT/'reports'/'verified_findings.md'
