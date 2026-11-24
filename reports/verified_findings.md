@@ -13,8 +13,8 @@
 
 ## Resume bullet candidates — verify these descriptions before using
 - Analyzed **2,756,101 e-commerce behavioral events** with DuckDB SQL, constructing an ordered visitor funnel that quantified **69.78%** observed cart-stage non-progression.
-- Compared future purchase rates across first-week engagement groups with 95% confidence intervals and logistic regression, measuring an observed **+0.524-percentage-point** difference while separating predictors from subsequent outcomes.
+- Compared future purchase rates across first-week engagement groups with a 95% confidence interval for the difference in proportions, measuring an observed **+0.524-percentage-point** difference while separating predictors from subsequent outcomes.
 - Produced **5 Tableau-ready analytical datasets** spanning funnel, engagement, cohort return, temporal trends, and item performance; evaluated **3,984** adequately supported items and documented a checkout A/B test proposal (not conducted).
 
-Dashboard status: CSV exports generated; Tableau visualization still requires manual authoring/publication.
+Dashboard status: Interactive Plotly website published at https://snehasunill.github.io/ecommerce-behaviour-analytics/; Tableau-ready CSV exports generated, but no Tableau dashboard has been published.
 No experiment was run, and no actual improvement in conversion is claimed.
