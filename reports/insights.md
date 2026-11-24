@@ -7,9 +7,9 @@ An independent analysis of **2,756,101 Retailrocket events** recorded between Ma
 1. Where do visitors fail to progress through observed view → cart → purchase milestones? Count distinct visitors in chronological order, requiring strictly later timestamps.
 2. Does first-week repeat engagement correlate with later purchases? Define engagement using days 0–7 after first-observed activity, then purchases during days 7–37; require complete follow-up.
 3. How frequently do visitors return on an exact later day? Use first-observed cohorts with horizon-specific eligible populations for D1, D7 and D30.
-4. Which products show significant interactions? Compare item view, cart and purchase **event ratios**, filtering to items with at least 100 views.
+4. Which products have meaningful levels of observed activity? Compare item view, cart and purchase **event ratios**, filtering to items with at least 100 views.
 
-## Finding 1 — The largest observed funnel drop-off is after carting
+## Finding 1 — Substantial observed drop-off after carting
 **Evidence:** 1,404,179 visitors viewed a product, 32,934 later added something to a cart, and 9,952 subsequently purchased. View → cart progression was **2.35%**; cart → purchase progression was **30.22%**. **22,982 of the 32,934 cart-stage visitors (69.78%)** had no later qualifying transaction.
 
 **Implication:** Investigate cart-to-purchase journeys, but do not claim checkout UX caused the drop-off. There are no session IDs, checkout-step events or guaranteed same-item matches. **Next step:** instrument checkout initiation, payment failures, item-level cart linkage and completion within a fixed observation window.
@@ -40,4 +40,4 @@ This dataset cannot establish unique shopping sessions, actual new-user acquisit
 
 The DuckDB analytics pipeline was successfully executed against the Retailrocket dataset, and all 11 automated tests passed locally. Key findings were independently checked using pandas.
 
-Logistic regression results are not reported because their execution and interpretation have not been independently verified. Tableau publication is planned for a later release.
+Logistic regression results are not reported because their execution and interpretation have not been independently verified. The [interactive Plotly dashboard](https://snehasunill.github.io/ecommerce-behaviour-analytics/) is published; a Tableau dashboard has not been built or published.
