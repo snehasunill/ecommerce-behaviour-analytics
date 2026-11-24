@@ -28,11 +28,13 @@ This is a **visitor-level, timestamp-ordered funnel**: each stage must occur aft
 
 ## Dashboard and exploratory views
 
-The repository includes a static preview of the validated aggregate metrics. The analytical pipeline also produces five datasets for further visualization: funnel, engagement groups, first-observed cohort retention, daily activity, and product metrics.
+The **[live interactive Plotly dashboard](https://snehasunill.github.io/ecommerce-behaviour-analytics/)** presents the observed visitor funnel, early-engagement purchase-rate comparison, exact-day return cohorts, daily event activity, and product-level exploration. Its published HTML source is [`docs/index.html`](docs/index.html); charts require an internet connection to load Plotly from its CDN.
 
-![Preview of conversion and engagement analytics](dashboard/analytics_preview.png)
+The repository also includes an earlier static preview of validated aggregate metrics:
 
-The preview is generated from observed data; it is not a published Tableau dashboard. See the [dashboard guide](dashboard/README.md) for the export schema and visualization instructions.
+![Static preview of conversion and engagement analytics](dashboard/analytics_preview.png)
+
+The pipeline generates five analysis datasets: funnel, engagement groups, first-observed cohort retention, daily activity, and product metrics. The separate [Tableau build guide](dashboard/README.md) describes an optional Tableau version; **no Tableau dashboard for this project has been published**.
 
 ## Recommendations for a product team
 
